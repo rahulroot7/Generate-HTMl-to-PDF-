@@ -1,0 +1,238 @@
+<?php
+
+/**
+ *Template Name: mpsegc profile pdf 
+//handlesRoles
+ */
+  require_once 'dompdf/autoload.inc.php';
+  use Dompdf\Dompdf;
+  $user_name = "xeamvent_xeamventures";
+  $password  = "ZR[N!eUf!gbf";
+  $database  = "xeamvent_xeamventures";
+  $server    = "localhost";
+  $db_handle = mysqli_connect($server, $user_name, $password);
+  $db_found = mysqli_select_db($db_handle,$database);
+
+   $result = mysqli_query($db_handle,"SELECT * FROM `job_application_form_test` ");   
+
+ 
+    while($row = mysqli_fetch_array($result))
+    {     
+        $dataId = $row['id'];
+         $qualification = mysqli_query($db_handle,"SELECT * FROM `job_application_qualification_test` where `job_application_id`='".$dataId."' ");
+         $work_expreance = mysqli_query($db_handle,"SELECT * FROM `job_application_work_experience_test` where `job_application_id`='".$dataId."' ");
+
+    $html = '<section class="download page inner_page_main" id="DOWNLOAD">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 entry-content1">
+        <div id="dvContainer">
+            <h1 style="text-align: center; font-size:35px ">Application Form </h1><br />         
+           
+            <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <td><label for="" text-align="right" style="min-width: 300px !important;">Registration Number</label></td>
+                  <td colspan="2">'.$row["registration_number"].'</td>
+                  <td rowspan="6" class="text-center" style="min-width: 215px !important;">
+                    <img src="'.$row["profile"].'" style="width: 150px;"alt="User Image">
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-366" class="vfb-desc">Position Applied for</label></td>
+                  <td colspan="2">'.$row["job_by_function"].'</td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-347" text-align="right">Name of the candidate </label></td>
+                  <td colspan="2">'.$row["first_name"].'</td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-366" class="vfb-desc">Gender</label></td>
+                  <td colspan="2">'.$row["gender"].'</td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-366" class="vfb-desc">Marital Status</label></td>
+                  <td colspan="2">'.$row["marital_status"].'</td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-347" text-align="right">Father’s/Husband’s name </label></td>
+                  <td colspan="2">'.$row["father_or_husband_first_name"].'</td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-347" text-align="right">Mother name </label></td>
+                  <td colspan="2">'.$row["father_or_husband_last_name"].'</td>
+                </tr>                
+
+                <tr>
+                  <td><label for="vfb-347" text-align="right">Domicile of </label></td>
+                  <td colspan="3">
+            <div class="row">
+              <div class="col-sm-6">
+                <p><b>State:</b> <span>'.$row["domicile_state"].'</span></p>
+              </div>
+              <div class="col-sm-6">
+                <p><b>Certificate Number:</b> <span>'.$row["domicile_certificate"].'</span></p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <p><b>Issuing Authority:</b> <span>'.$row["domicile_authority"].'</span></p>
+              </div>
+              <div class="col-sm-6">
+                <p><b>Date of Issue:</b> <span>'.$row["domicile_date"].'</span></p>
+              </div>
+            </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td><label for="" text-align="right">Aadhar No.</label></td>
+                  <td colspan="3">'.$row["aadhar_number"].'</td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-351" class="vfb-desc">Date of Birth </label></td>
+          <td colspan="3">'.$row["date_of_birth"].'<span>'.$row["age"].'</span></td>
+                </tr>
+
+
+                <tr>
+                  <td><label for="vfb-364" class="vfb-desc">Address for communication (present)</label></td>
+                  <td colspan="3">'.$row["present_address"].'" - "'.$row["present_district"].'" - "'.$row["present_state"].'</td>
+                </tr>
+
+                <tr>
+                  <td><label for="vfb-364" class="vfb-desc">Address for communication (permanent)</label></td>
+                   <td colspan="3">'.$row["permanent_address"].'" - "'.$row["permanent_district"].'" - "'.$row["permanent_state"].'</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <label for="vfb-351" class="vfb-desc">E-mail and Mobile No </label>
+                  </td>
+                  <td colspan="3">
+                    <div class="row">
+                      <div class="col-sm-6">'.$row["email"].'</div>
+                      <div class="col-sm-6">'.$row["mobile_no"].'</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <hr>
+            <h4>Educational Qualification:</h4>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Degree</th>
+                    <th>Year of passing</th>
+                    <th>Course</th>
+                    <th>Institute Name</th>
+                    <th>% of Marks</th>
+                  </tr>
+                </thead>
+                <tbody id="edu_quali_tbody">';
+                 while ($qualificationRow = mysqli_fetch_assoc($qualification)) {
+                
+                 $html .= '<tr>
+                    <td>'.$qualificationRow["dgree"].'</td>
+                    <td>'.$qualificationRow["year_of_passing"].'</td>
+                    <td>'.$qualificationRow["course"].'</td>
+                    <td>'.$qualificationRow["institute_name"].'</td>
+                    <td>'.$qualificationRow["percentage"].'</td>
+                  </tr>'; 
+                } 
+                $html .= '</tbody>
+              </table>
+            </div>
+
+            <hr>
+            <h4>Work Experience:</h4>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Designation </th>
+                    <th>Name of Organization/institution </th>
+                    <th>Duration </th>
+                    <th>Nature of experience</th>
+                    <th>Employer contact details</th>
+                  </tr>
+                </thead>
+                <tbody id="work_exp_tbody">';
+                 while ($workExpreanceRow = mysqli_fetch_assoc($work_expreance)) {
+                 $html .= '<tr>
+                    <td>'.$workExpreanceRow["designation"].'</td>
+                    <td>'.$workExpreanceRow["organization"].'</td>
+                    <td>'.$workExpreanceRow["duration"].'</td>
+                    <td>'.$workExpreanceRow["experience"].'</td>
+                    <td>'.$workExpreanceRow["contact_details"].'</td>
+                  </tr>';
+                 }           
+                $html .= '</tbody>
+              </table>
+            </div>
+
+            <hr>
+
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td colspan="3">
+                    <div class="row">
+                      <div class="col-sm-4 signature">
+                       <img src="'.$row["signature"].'" class="sign_img" alt="User Image">
+                        <label for="" text-align="right">Signature</label>
+                      </div>
+                      <div class="col-sm-4">
+                         <p><b>Place :</b>'.$row["place"].'</p>
+                      </div>
+                      <div class="col-sm-4">
+                       <p><b>Issue Date :</b>'.$row["issue_date"].'</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+            
+
+            <div class="Decla-form">
+              <h2>Declaration</h2>
+              I hereby declare that all the information provided in the application and any attachment in support thereof is to the best of my knowledge true and correct.<br />
+              I understand:<br />
+              1) That any misrepresentation or failure to disclose any information leads to my disqualification or termination of my employment if appointed.<br />
+              2) That is mere application form and doesn’t confirm any appointment; appointment will be strictly on the basis of qualification, experience and merits etc.<br><br>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+</section>';
+            // echo $html;
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->set_option('isRemoteEnabled', true);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        // write pdf to a file
+        $pdf = $dompdf->output();
+        file_put_contents("profile_pdf/".$row["first_name"].".pdf", $pdf);
+        // $dompdf->stream();
+        // exit;
+        die;
+    }
+
+
+
